@@ -9,6 +9,7 @@ import { RoomsModule } from './rooms/rooms.module';
 import { AuthModule } from './auth/auth.module';
 import { SocketModule } from './socket/socket.module';
 import { PlannersModule } from './planners/planners.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PlannersModule } from './planners/planners.module';
     AuthModule,
     SocketModule,
     PlannersModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

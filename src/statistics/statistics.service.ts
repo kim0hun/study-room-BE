@@ -513,7 +513,11 @@ export class StatisticsService {
     startOfWeek.setDate(startOfWeek.getDate() - offset * 7);
 
     const endOfWeek = offset === 0 ? new Date() : new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 7);
+    if (offset === 0) {
+      endOfWeek.setDate(endOfWeek.getDate() + 1);
+    } else {
+      endOfWeek.setDate(startOfWeek.getDate() + 7);
+    }
 
     return {
       startDate: startOfWeek.toLocaleDateString('en-CA'),

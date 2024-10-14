@@ -131,7 +131,10 @@ export class SocketService {
         planner.date === date
           ? { _id: temp.plannerId }
           : { todo: planner.todo, date, userId: new Types.ObjectId(userId) };
-      const maxTime = date === today ? currentTime - temp.maxStartTime : 0;
+      const maxTime =
+        date === today
+          ? Math.floor((currentTime - temp.maxStartTime) / 1000)
+          : 0;
 
       await this.updatePlanner(filter, {
         $push: { timelineList },
@@ -177,9 +180,17 @@ export class SocketService {
   }
 
   async start(client: Socket, payload: PayloadDto) {
-    const { plannerId, currentTime, totalTime } = payload;
+    const { plannerId, totalTime } = payload;
+    const currentTime = Date.now();
     const userId: string = client.data.user._id;
     const { roomId, nickname } = this.getSocketQuery(client);
+
+    const plannerCheck = await this.plannerModel.findById(plannerId);
+    const today = this.getFormattedDate();
+
+    if (plannerCheck.date < today) {
+      throw new WsException('지난 할 일은 선택할 수 없습니다.');
+    }
 
     const temp = await this.findTemp(userId);
 
@@ -202,8 +213,6 @@ export class SocketService {
       });
     }
 
-    const today = this.getFormattedDate();
-
     await this.updateTemp(userId, today, {
       plannerId: new Types.ObjectId(plannerId),
       maxStartTime: currentTime,
@@ -217,8 +226,8 @@ export class SocketService {
   }
 
   async stop(client: Socket, payload: PayloadDto) {
-    const { currentTime, totalTime } = payload;
-    const plannerId = payload.plannerId;
+    const { plannerId, totalTime } = payload;
+    const currentTime = Date.now();
     const { roomId, nickname } = this.getSocketQuery(client);
     const userId: string = client.data.user._id;
 
@@ -276,9 +285,17 @@ export class SocketService {
   }
 
   async change(client: Socket, payload: PayloadDto) {
-    const { plannerId, currentTime, totalTime } = payload;
+    const { plannerId, totalTime } = payload;
+    const currentTime = Date.now();
     const { roomId, nickname } = this.getSocketQuery(client);
     const userId: string = client.data.user._id;
+
+    const plannerCheck = await this.plannerModel.findById(plannerId);
+    const today = this.getFormattedDate();
+
+    if (plannerCheck.date < today) {
+      throw new WsException('지난 할 일은 선택할 수 없습니다.');
+    }
 
     const temp = await this.findTemp(userId);
 
@@ -296,14 +313,13 @@ export class SocketService {
       currentTime
     );
 
-    const planner = await this.plannerModel.findById(plannerId);
-    const today = this.getFormattedDate();
+    const planner = await this.plannerModel.findById(temp.plannerId);
 
     results.forEach(async (v) => {
       const { date, totalTime, timelineList, ...etc } = v;
       const filter =
         planner.date === date
-          ? { _id: new Types.ObjectId(plannerId) }
+          ? { _id: new Types.ObjectId(temp.plannerId) }
           : { todo: planner.todo, date, userId: new Types.ObjectId(userId) };
 
       await this.updatePlanner(filter, {
@@ -327,7 +343,8 @@ export class SocketService {
   }
 
   async update(client: Socket, payload: PayloadDto) {
-    const { plannerId, currentTime } = payload;
+    const { plannerId } = payload;
+    const currentTime = Date.now();
     const userId: string = client.data.user._id;
 
     const temp = await this.findTemp(userId);
@@ -442,6 +459,28 @@ export class SocketService {
     };
 
     return response;
+  }
+
+  async modifyRoomOption(payload: any, client: Socket) {
+    const { roomId } = this.getSocketQuery(client);
+    const userId: string = client.data.user._id;
+
+    const room = await this.roomModel.findById(roomId);
+
+    if (!room) {
+      throw new WsException('방이 존재하지 않습니다.');
+    }
+
+    if (room.roomManager.toString() !== userId) {
+      throw new WsException('방장만 방설정을 변경할 수 있습니다.');
+    }
+
+    const updatedRoom = await this.roomModel.findOneAndUpdate(
+      { _id: new Types.ObjectId(roomId) },
+      payload
+    );
+
+    return updatedRoom;
   }
 
   getFormattedDate(option: number = 0): string {

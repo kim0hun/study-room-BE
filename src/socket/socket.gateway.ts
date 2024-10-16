@@ -16,7 +16,7 @@ import {
   GetPlannerDto,
   ModifyPlannerDto,
 } from './dto/planner.dto';
-import { ResponseUserInfoDto } from './dto/joinAndLeave.dto';
+import { ModifyRoomDto, ResponseUserInfoDto } from './dto/joinAndLeave.dto';
 
 @WebSocketGateway({
   namespace: '/rooms',
@@ -59,7 +59,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     } catch (error) {
       console.log(error);
-      client.emit('error', { error: error.message });
+      client.emit('error', { message: error.message });
     }
   }
 
@@ -73,14 +73,17 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const now = Date.now();
       const { roomId, nickname } = this.socketService.getSocketQuery(client);
       await this.socketService.save(client, now);
-      client.broadcast.to(roomId).emit('subMember', { nickname });
-      const { isChat } = await this.socketService.leaveRoom(client, roomId);
+      const { isChat, roomManager } = await this.socketService.leaveRoom(
+        client,
+        roomId
+      );
+      client.broadcast.to(roomId).emit('subMember', { nickname, roomManager });
       if (isChat) {
         this.socketService.leaveChat(this.server, roomId, nickname);
       }
     } catch (error) {
       console.log(error);
-      client.emit('error', { error: error.message });
+      client.emit('error', { message: error.message });
     }
     console.log(`Client disconnected: ${client.data.user._id}`);
   }
@@ -128,7 +131,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.socketService.start(client, payload);
     } catch (error) {
       console.log(error);
-      client.emit('error', { error: error.message });
+      client.emit('error', { message: error.message });
     }
   }
 
@@ -141,7 +144,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.socketService.stop(client, payload);
     } catch (error) {
       console.log(error);
-      client.emit('error', { error: error.message });
+      client.emit('error', { message: error.message });
     }
   }
 
@@ -154,7 +157,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.socketService.change(client, payload);
     } catch (error) {
       console.log(error);
-      client.emit('error', { error: error.message });
+      client.emit('error', { message: error.message });
     }
   }
 
@@ -167,7 +170,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.socketService.update(client, payload);
     } catch (error) {
       console.log(error);
-      client.emit('error', { error: error.message });
+      client.emit('error', { message: error.message });
     }
   }
 
@@ -183,7 +186,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit('responseGetPlanner', planner);
     } catch (error) {
       console.log(error);
-      client.emit('error', { error: error.message });
+      client.emit('error', { message: error.message });
     }
   }
 
@@ -197,7 +200,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit('responseCreatePlanner', planner);
     } catch (error) {
       console.log(error);
-      client.emit('error', { error: error.message });
+      client.emit('error', { message: error.message });
     }
   }
 
@@ -211,7 +214,24 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit('responseModifyPlanner', planner);
     } catch (error) {
       console.log(error);
-      client.emit('error', { error: error.message });
+      client.emit('error', { message: error.message });
+    }
+  }
+
+  @SubscribeMessage('modifyRoomInfo')
+  async modifyRoomOption(
+    @MessageBody() payload: ModifyRoomDto,
+    @ConnectedSocket() client: Socket
+  ) {
+    try {
+      const response = await this.socketService.modifyRoomOption(
+        payload,
+        client
+      );
+      this.server.emit('modifiedRoomInfo', response);
+    } catch (error) {
+      console.log(error);
+      client.emit('error', { message: error.message });
     }
   }
 }

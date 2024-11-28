@@ -5,7 +5,8 @@
   <div style="margin-top: 20px;">
     <a href="#-프로젝트-소개" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">프로젝트 소개</a> •
     <a href="#-주요-기능" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">주요 기능</a> •
-    <a href="#-기술-스택" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">기술 스택</a>
+    <a href="#-기술-스택" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">기술 스택</a> •
+    <a href="#-팀원" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">팀원</a>
   </div>
 </div>
 
@@ -71,3 +72,16 @@
   <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="Github">
   <img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white" alt="Postman">
 </p>
+
+## 👥 팀원
+<div align="center">
+  <table style="border-collapse: collapse; width: 70%;">
+    <tr>
+      <td align="center" style="padding: 10px;"><a href="https://github.com/kim0hun"><img src="https://avatars.githubusercontent.com/kim0hun" width="100px;" alt=""/><br /><sub><b>김영훈</b></sub></a><br />백엔드</td>
+      <td align="center" style="padding: 10px;"><a href="https://github.com/NASUNJIN"><img src="https://avatars.githubusercontent.com/NASUNJIN" width="100px;" alt=""/><br /><sub><b>나선진</b></sub></a><br />프론트엔드</td>
+      <td align="center" style="padding: 10px;"><a href="https://github.com/JSLEE753"><img src="https://avatars.githubusercontent.com/JSLEE753" width="100px;" alt=""/><br /><sub><b>이진성</b></sub></a><br />프론트엔드</td>
+      <td align="center" style="padding: 10px;"><a href="https://github.com/bang-wol"><img src="https://avatars.githubusercontent.com/bang-wol" width="100px;" alt=""/><br /><sub><b>방수빈</b></sub></a><br />풀스택</td>
+      <td align="center" style="padding: 10px;"><a href="https://github.com/ii-0122"><img src="https://avatars.githubusercontent.com/ii-0122" width="100px;" alt=""/><br /><sub><b>신유정</b></sub></a><br />풀스택</td>
+    </tr>
+  </table>
+</div>

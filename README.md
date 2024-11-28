@@ -4,7 +4,7 @@
 
   <div style="margin-top: 20px;">
     <a href="#-프로젝트-소개" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">프로젝트 소개</a> •
-    <a href="#-주요-기능" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">주요 기능</a> •
+    <a href="#-상세-기능" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">상세 기능</a> •
     <a href="#-기술-스택" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">기술 스택</a> •
     <a href="#-팀원" style="margin: 0 10px; text-decoration: none; color: #1E90FF; font-weight: bold;">팀원</a>
   </div>
@@ -19,7 +19,7 @@
 - 목표
   - 학습자들이 효율적으로 협업하고, 성과를 체계적으로 관리하며, 지속적인 동기부여를 받을 수 있는 환경을 제공합니다.
 
-## 🌟 기능
+## 🌟 상세 기능
 
 ### 1. 사용자
 - 회원가입
